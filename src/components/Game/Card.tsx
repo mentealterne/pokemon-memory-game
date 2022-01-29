@@ -21,7 +21,6 @@ const Card: FunctionComponent<IProps> = ({ card, onClick }) => {
     if (store.gameOver) return;
     onClick(card);
     setFlipped(!card.flipped);
-    console.log(flipped);
   };
 
   const variants = {
