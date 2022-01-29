@@ -16,9 +16,9 @@ function App() {
       store.addCard(card);
     }
   };
-
   useEffect(() => {
     audio.play();
+    if (!store.started) return;
     fetchCards();
 
     setTimeout(() => {
