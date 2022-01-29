@@ -1,19 +1,22 @@
 import { FunctionComponent } from "react";
-import GameController from "../../controllers/game.controller";
-import { ICard } from "../../controllers/game.interfaces";
 import CardsBoard from "./CardsBoard";
 import { observer } from "mobx-react-lite";
-import { values } from "mobx";
 import store from "../../models/models";
+import GameStateBar from "./GameStateBar";
 
-interface IProps {}
-
-const MainBoard: FunctionComponent<IProps> = () => {
+const MainBoard: FunctionComponent = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-gray-300">
-      <CardsBoard />
+    <div className=" mx-auto flex flex-col space-y-4 items-center justify-center">
+      {store.cards.length ? (
+        <>
+          <CardsBoard />
+          <GameStateBar />
+        </>
+      ) : (
+        <span>Loading</span>
+      )}
     </div>
   );
 };
 
-export default MainBoard;
+export default observer(MainBoard);

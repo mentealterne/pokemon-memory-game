@@ -8,8 +8,20 @@ export interface ICharacter {
   spriteURL: string;
 }
 
-export interface ICard extends ICharacter {
+export interface ICard {
+  pokemonId: number;
+  name: string;
+  spriteURL: string;
   flipped: boolean;
   clickable: boolean;
-  index: number;
+  id: number;
+}
+
+export interface IGameState {
+  cards: ICard[];
+  selectedCards: number[];
+  score: number;
+  started: boolean;
+  gameOver: boolean;
+  timer: number;
 }

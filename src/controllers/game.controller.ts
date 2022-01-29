@@ -1,5 +1,4 @@
-import CardsBoardObserver from "../components/Game/CardsBoard";
-import { ICard, IGameRepo } from "./game.interfaces";
+import { ICard, IGameRepo, IGameState } from "./game.interfaces";
 
 export default class GameController {
   private gameRepo: IGameRepo;
@@ -13,7 +12,17 @@ export default class GameController {
       selectedCards: [],
       score: 0,
       gameOver: false,
+      started: false,
+      timer: 3600 * 2,
     };
+  }
+
+  setGameOver(isGameOver: boolean) {
+    this.state.gameOver = isGameOver;
+  }
+
+  startGame() {
+    this.state.started = true;
   }
 
   async setupCards(charactersLimit: number): Promise<void> {
@@ -22,18 +31,19 @@ export default class GameController {
     const cardSet: ICard[] = [...characters, ...characters].map(
       (character, index) => {
         return {
-          id: character.id,
+          pokemonId: character.id,
           name: character.name,
           spriteURL: character.spriteURL,
           flipped: true,
           clickable: false,
-          index,
+          id: index,
         };
       }
     );
 
     this.setState({
       ...this.state,
+      started: true,
       cards: this.shuffle([...cardSet]),
     });
   }
@@ -59,7 +69,7 @@ export default class GameController {
     if (this.state.selectedCards.length < 2) {
       this.setState({
         ...this.state,
-        selectedCards: [...this.state.selectedCards, card],
+        selectedCards: [...this.state.selectedCards, card.pokemonId],
       });
     }
   }
@@ -74,14 +84,14 @@ export default class GameController {
   }
 
   checkMatch() {
-    const [firstCard, secondCard] = this.state.selectedCards;
-    if (firstCard.id === secondCard.id) {
+    const [firstCardId, secondCardId] = this.state.selectedCards;
+    if (firstCardId === secondCardId) {
       this.setState({
         ...this.state,
         score: this.state.score + 1,
         selectedCards: [],
         cards: this.state.cards.map((card) => {
-          if (card.id === firstCard.id || card.id === secondCard.id) {
+          if (card.pokemonId === firstCardId) {
             return { ...card, clickable: false, flipped: true };
           }
           return card;
@@ -90,10 +100,10 @@ export default class GameController {
     } else {
       this.setState({
         ...this.state,
-        score: this.state.score + 1,
+        score: this.state.score,
         selectedCards: [],
         cards: this.state.cards.map((card) => {
-          if (card.id === firstCard.id || card.id === secondCard.id) {
+          if (card.pokemonId === firstCardId) {
             return { ...card, clickable: true, flipped: false };
           }
           return card;
@@ -104,15 +114,25 @@ export default class GameController {
     this.checkGameOver();
   }
 
+  toggleClickable(clickable: boolean) {
+    this.setState({
+      ...this.state,
+      cards: this.state.cards.map((card) => {
+        return !card.flipped ? { ...card, clickable } : card;
+      }),
+    });
+  }
+
   flipCard(card: ICard): void {
-    console.log(this.state.cards);
-    if (!card.flipped) this.addToSelectedCards(card);
+    this.addToSelectedCards(card);
 
     if (this.state.selectedCards.length === 2) {
+      this.toggleClickable(false);
       this.checkMatch();
+      this.toggleClickable(true);
     } else {
       const cards = this.state.cards.map((c) => {
-        if (c.index === card.index) {
+        if (c.id === card.id) {
           return { ...c, flipped: !c.flipped, clickable: !c.clickable };
         }
 
@@ -146,11 +166,4 @@ export default class GameController {
   static createGame(gameRepo: IGameRepo) {
     return new GameController(gameRepo);
   }
-}
-
-interface IGameState {
-  cards: ICard[];
-  selectedCards: ICard[];
-  score: number;
-  gameOver: boolean;
 }
