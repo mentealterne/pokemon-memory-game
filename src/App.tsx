@@ -17,8 +17,6 @@ function App() {
     }
   };
 
-  if (store.started) {
-  }
   useEffect(() => {
     audio.play();
     fetchCards();
