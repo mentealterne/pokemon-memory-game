@@ -43,6 +43,7 @@ const Card: FunctionComponent<IProps> = ({ card, onClick }) => {
       onClick={() => onCardClick()}
     >
       <img
+        alt={card.name}
         src={
           flipped ? card.spriteURL : process.env.PUBLIC_URL + "/pokeball.png"
         }

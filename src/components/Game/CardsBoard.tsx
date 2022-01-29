@@ -1,5 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
-import { ICard } from "../../controllers/game.interfaces";
+import { FunctionComponent } from "react";
 import Card from "./Card";
 import store from "../../models/models";
 import { observer } from "mobx-react-lite";

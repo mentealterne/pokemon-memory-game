@@ -6,19 +6,20 @@ const GameStateBar: FunctionComponent = () => {
   const [timer, setTimer] = useState<number>();
 
   useEffect(() => {
+    if (!store.timer) return;
     let timerRef = store.timer / 60;
 
     const decreaseTimer = setInterval(() => {
       if (store.gameOver) clearInterval(decreaseTimer);
 
       timerRef--;
-      if (timerRef == 0) {
+      if (timerRef === 0) {
         clearInterval(decreaseTimer);
         store.setGameOver(true);
       }
       setTimer(timerRef);
     }, 1000);
-  }, [store.timer]);
+  }, []);
 
   return (
     <div className=" flex flex-row justify-between w-full">
