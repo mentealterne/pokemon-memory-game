@@ -29,7 +29,7 @@ const GameStateBar: FunctionComponent = () => {
         <span>
           {" "}
           Game Over, you{" "}
-          {store.score == store.cards.length / 2 ? " Won!" : "lost"}
+          {store.score === store.cards.length / 2 ? " Won!" : "lost"}
         </span>
       ) : (
         ""

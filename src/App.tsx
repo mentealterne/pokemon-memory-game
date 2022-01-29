@@ -16,9 +16,11 @@ function App() {
       store.addCard(card);
     }
   };
+
+  if (store.started) {
+  }
   useEffect(() => {
     audio.play();
-    if (!store.started) return;
     fetchCards();
 
     setTimeout(() => {
